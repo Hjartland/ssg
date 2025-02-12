@@ -4,7 +4,8 @@ from inline_markdown import (split_nodes_delimiter,
                              extract_markdown_images, 
                              extract_markdown_links, 
                              split_nodes_link, 
-                             split_nodes_image)
+                             split_nodes_image,
+                             text_to_textnodes)
 
 class TestInlineMarkDown(unittest.TestCase):
     def test_code_block(self):
@@ -201,7 +202,61 @@ class TestInlineMarkDown(unittest.TestCase):
         ]
         self.assertEqual(split_nodes_image([node]), expected)
     
-
+    def test_text_only(self):
+        text = "Just some plain text."
+        expected = [TextNode("Just some plain text.", TextType.TEXT)]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
+    def test_bold_text(self):
+        text = "This is **bold** text."
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" text.", TextType.TEXT),
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
+    def test_italic_text(self):
+        text = "This is *italic* text."
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" text.", TextType.TEXT),
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
+    def test_code_block(self):
+        text = "This is `code` inside."
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" inside.", TextType.TEXT),
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
+    def test_image(self):
+        text = "An image ![alt text](https://image.com/image.png)."
+        expected = [
+            TextNode("An image ", TextType.TEXT),
+            TextNode("alt text", TextType.IMAGE, "https://image.com/image.png"),
+            TextNode(".", TextType.TEXT),
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
+    def test_link(self):
+        text = "A link to [Boot.dev](https://boot.dev)."
+        expected = [
+            TextNode("A link to ", TextType.TEXT),
+            TextNode("Boot.dev", TextType.LINK, "https://boot.dev"),
+            TextNode(".", TextType.TEXT),
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)
+            
+    def test_empty_string(self):
+        text = ""
+        expected = [TextNode("", TextType.TEXT)]
+        self.assertEqual(text_to_textnodes(text), expected)
+    
 
 if __name__ == "__main__":
     unittest.main()
