@@ -256,7 +256,6 @@ class TestInlineMarkDown(unittest.TestCase):
         text = ""
         expected = [TextNode("", TextType.TEXT)]
         self.assertEqual(text_to_textnodes(text), expected)
-    
 
 if __name__ == "__main__":
     unittest.main()
