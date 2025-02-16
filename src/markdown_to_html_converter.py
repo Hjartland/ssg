@@ -25,7 +25,9 @@ def handle_quote(block):
     return ParentNode("blockquote", text_to_children(" ".join(lines)))
 
 def handle_unordered_list(block):
-    items = [line.lstrip('*- ') for line in block.split('\n')]
+    #items = [line.lstrip('*- ') for line in block.split('\n')]
+    items = [re.sub(r'^[\*-] ', '', line) for line in block.split('\n')]
+    #print("Items after stripping:", items)  # Debug line
     children = [ParentNode("li", text_to_children(item)) for item in items]
     return ParentNode("ul", children)
 

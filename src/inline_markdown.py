@@ -10,11 +10,11 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             new_nodes.append(node)
             continue
         
-        parts = node.text.split(delimiter)
-        if len(parts) % 2 == 0:
+        
+        if node.text.count(delimiter) % 2 != 0:
             raise ValueError(f"Invalid Markdown syntax: Unmatched delimiter '{delimiter}' in text '{node.text}'")
         
-        #is_matching = False
+        parts = node.text.split(delimiter)
         split_nodes = []
 
         for i, part in enumerate(parts):
